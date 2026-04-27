@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Etnika - Premium Churidhars</title>
+    <style>
+        :root {
+            --maroon: #6B1D2F;
+            --gold: #C8963E;
+            --cream: #FFF8F0;
+            --deep-red: #8B1A2B;
+            --soft-gold: #D4A853;
+            --text-dark: #2C1810;
+            --text-light: #5D4037;
+            --white: #FFFFFF;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 12px 40px rgba(107, 29, 47, 0.15);
+            --transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            --border-radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Poppins', 'Noto Sans', system-ui, sans-serif;
+            background-color: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== NAVIGATION ==================== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(255, 248, 240, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(200, 150, 62, 0.2);
+            transition: var(--transition);
+            padding: 0 2rem;
+            transform: translateY(0);
+        }
+
+        .navbar.scrolled {
+            box-shadow: 0 2px 30px rgba(107, 29, 47, 0.12);
+            background: rgba(255, 248, 240, 0.95);
+        }
+
+        .navbar.hidden {
+            transform: translateY(-100%);
+        }
+
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: var(--maroon);
+            height: 50px;
+        }
+
+        .logo-img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--maroon), var(--deep-red));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: var(--maroon);
+        }
+
+        .logo-text span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2.2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gold);
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .nav-links a:hover {
+            color: var(--maroon);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: var(--maroon);
+            color: var(--white) !important;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600 !important;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            font-size: 0.9rem !important;
+        }
+
+        .nav-cta:hover {
+            background: var(--deep-red) !important;
+            color: var(--white) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(107, 29, 47, 0.3);
+        }
+        .nav-cta::after {
+            display: none !important;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            z-index: 1001;
+        }
+        .hamburger span {
+            width: 28px;
+            height: 2.5px;
+            background: var(--maroon);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* ==================== HERO SLIDESHOW ==================== */
+        .hero {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            min-height: 650px;
+            overflow: hidden;
+            margin-top: 0;
+        }
+
+        .slides-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out, transform 1.2s ease-in-out;
+            transform: scale(1.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg,
+                    rgba(44, 24, 16, 0.55) 0%,
+                    rgba(44, 24, 16, 0.3) 40%,
+                    rgba(107, 29, 47, 0.5) 100%);
+            z-index: 1;
+        }
+
+        /* Slide backgrounds - using actual images with overlay */
+        .slide-1 {
+            background: linear-gradient(135deg, #3d0c17 0%, #6B1D2F 30%, #8B1A2B 60%, #4a1525 100%);
+            background-image: url('./images/slide1.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .slide-2 {
+            background: linear-gradient(135deg, #1a0a0f 0%, #5c1a2a 30%, #7a1e35 60%, #2d1018 100%);
+            background-image: url('./images/slide2.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .slide-3 {
+            background: linear-gradient(135deg, #2d0d16 0%, #4a1525 30%, #6B1D2F 60%, #3d0c17 100%);
+            background-image: url('./images/slide3.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #FFF;
+            padding: 2rem;
+            max-width: 750px;
+        }
+
+        .slide-badge {
+            display: inline-block;
+            background: rgba(200, 150, 62, 0.25);
+            border: 1px solid rgba(212, 168, 83, 0.5);
+            color: #FFD89B;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .slide-content h1 {
+            font-size: 3.8rem;
+            font-weight: 700;
+            line-height: 1.15;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+            animation: fadeInUp 0.8s ease-out 0.15s both;
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .slide-content h1 .gold-text {
+            color: #FFD89B;
+            display: inline;
+        }
+
+        .slide-content p {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.2rem;
+            animation: fadeInUp 0.8s ease-out 0.3s both;
+            letter-spacing: 0.3px;
+        }
+
+        .slide-btn {
+            display: inline-block;
+            background: var(--gold);
+            color: #2C1810;
+            padding: 14px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            letter-spacing: 0.8px;
+            transition: var(--transition);
+            animation: fadeInUp 0.8s ease-out 0.45s both;
+            text-transform: uppercase;
+            box-shadow: 0 8px 30px rgba(200, 150, 62, 0.35);
+        }
+
+        .slide-btn:hover {
+            background: #FFD89B;
+            transform: translateY(-3px);
+            box-shadow: 0 14px 40px rgba(200, 150, 62, 0.5);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Slide indicators */
+        .slide-indicators {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+            display: flex;
+            gap: 12px;
+        }
+        .slide-indicators button {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.7);
+            background: transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+        }
+        .slide-indicators button.active {
+            background: var(--gold);
+            border-color: var(--gold);
+            box-shadow: 0 0 20px rgba(200, 150, 62, 0.6);
+            width: 36px;
+            border-radius: 20px;
+        }
+
+        .slide-arrows {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #FFF;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: var(--transition);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slide-arrows:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #FFF;
+        }
+        .slide-arrows.prev {
+            left: 30px;
+        }
+        .slide-arrows.next {
+            right: 30px;
+        }
+
+        /* ==================== SECTION STYLES ==================== */
+        .section {
+            padding: 90px 2rem;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .section-header .subtitle {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .section-header h2 {
+            font-size: 2.6rem;
+            color: var(--maroon);
+            font-weight: 700;
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+        }
+        .section-header .divider {
+            width: 70px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--gold), #FFD89B, var(--gold));
+            margin: 0 auto;
+            border-radius: 3px;
+        }
+        .section-header p {
+            color: var(--text-light);
+            margin-top: 14px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.05rem;
+        }
+
+        /* ==================== FEATURED PRODUCTS ==================== */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(200, 150, 62, 0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(200, 150, 62, 0.3);
+        }
+
+        .product-image {
+            position: relative;
+            width: 100%;
+            height: 420px;
+            overflow: hidden;
+            background: #fdf2e8; /* fallback while images load */
+        }
+
+        /* Image fills the container nicely */
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.4s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.03);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            background: var(--gold);
+            color: #2C1810;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+        .product-badge.new {
+            background: #2d6a4f;
+            color: #FFF;
+        }
+        .product-badge.bestseller {
+            background: var(--maroon);
+            color: #FFD89B;
+        }
+
+        .product-wishlist {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.85);
+            border: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.1rem;
+            z-index: 2;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(6px);
+        }
+        .product-wishlist:hover {
+            background: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .product-info {
+            padding: 22px 20px;
+        }
+        .product-info h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        .product-info .category {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+        }
+        .product-info .price {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--maroon);
+        }
+        .product-info .price .original {
+            text-decoration: line-through;
+            color: #b0a090;
+            font-size: 0.9rem;
+            margin-left: 8px;
+            font-weight: 400;
+        }
+        .product-info .price .discount {
+            color: #2d6a4f;
+            font-size: 0.8rem;
+            margin-left: 6px;
+            font-weight: 600;
+        }
+        .product-colors {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .product-colors span {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            border: 2px solid #e0d5c5;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .product-colors span:hover {
+            border-color: var(--gold);
+            transform: scale(1.2);
+        }
+        .color-1 { background: #8b1a2b; }
+        .color-2 { background: #1a3c5e; }
+        .color-3 { background: #2d6a4f; }
+        .color-4 { background: #c4962e; }
+        .color-5 { background: #4a154b; }
+
+        .add-to-cart-btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 12px;
+            margin-top: 14px;
+            background: transparent;
+            border: 2px solid var(--maroon);
+            color: var(--maroon);
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+        .add-to-cart-btn:hover {
+            background: var(--maroon);
+            color: #FFF;
+            box-shadow: 0 6px 25px rgba(107, 29, 47, 0.3);
+        }
+
+        .product-sizes {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .product-sizes .size-btn {
+            flex: 1;
+            min-width: 40px;
+            padding: 8px 6px;
+            text-align: center;
+            border: 2px solid #d4a853;
+            background: transparent;
+            color: var(--text-dark);
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .product-sizes .size-btn:hover {
+            background: var(--soft-gold);
+            color: #2C1810;
+            border-color: var(--soft-gold);
+        }
+        .product-sizes .size-btn.selected {
+            background: var(--maroon);
+            color: #FFF;
+            border-color: var(--maroon);
+        }
+
+        /* ==================== TESTIMONIALS ==================== */
+        #testimonials {
+            background: linear-gradient(180deg, #fff 0%, #FFF8F0 100%);
+            padding: 90px 2rem;
+        }
+        .testimonials-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 28px;
+        }
+        .testimonial-card {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 35px 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(200, 150, 62, 0.1);
+            transition: var(--transition);
+            position: relative;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+            border-color: rgba(200, 150, 62, 0.25);
+        }
+        .testimonial-card .quote-icon {
+            font-size: 3.5rem;
+            color: rgba(200, 150, 62, 0.3);
+            position: absolute;
+            top: 16px;
+            right: 24px;
+            line-height: 1;
+            font-family: Georgia, serif;
+        }
+        .testimonial-stars {
+            color: #F4B400;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            letter-spacing: 2px;
+        }
+        .testimonial-card p {
+            color: var(--text-light);
+            font-size: 0.98rem;
+            margin-bottom: 18px;
+            font-style: italic;
+            line-height: 1.7;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .testimonial-author .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #FFF;
+            flex-shrink: 0;
+        }
+        .avatar-1 { background: linear-gradient(135deg, #6B1D2F, #C8963E); }
+        .avatar-2 { background: linear-gradient(135deg, #1a3c5e, #4a90d9); }
+        .avatar-3 { background: linear-gradient(135deg, #2d6a4f, #52b788); }
+        .author-info strong {
+            display: block;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+        }
+        .author-info span {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* ==================== CONTACT US ==================== */
+        #contact {
+            padding: 90px 2rem;
+            background: var(--white);
+        }
+        .contact-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+        .contact-info h3 {
+            font-size: 1.8rem;
+            color: var(--maroon);
+            margin-bottom: 20px;
+        }
+        .contact-info p {
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+        .contact-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .contact-detail .icon-circle {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(200, 150, 62, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            color: var(--maroon);
+        }
+        .contact-detail .info-text strong {
+            display: block;
+            color: var(--text-dark);
+            margin-bottom: 2px;
+        }
+        .contact-detail .info-text span {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .contact-form {
+            background: #FFF8F0;
+            padding: 40px 35px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(200, 150, 62, 0.15);
+        }
+        .contact-form h3 {
+            font-size: 1.4rem;
+            color: var(--maroon);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 13px 16px;
+            border: 2px solid #e8ddd0;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: var(--transition);
+            background: #FFF;
+            color: var(--text-dark);
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 4px rgba(200, 150, 62, 0.08);
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--maroon);
+            color: #FFF;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .submit-btn:hover {
+            background: var(--deep-red);
+            box-shadow: 0 10px 35px rgba(107, 29, 47, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            background: #2C1810;
+            color: #c4b5a8;
+            text-align: center;
+            padding: 30px 2rem;
+            font-size: 0.9rem;
+        }
+        footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+        footer .footer-social {
+            display: flex;
+            gap: 18px;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 1.4rem;
+        }
+        footer .footer-social a {
+            color: #c4b5a8;
+            transition: var(--transition);
+        }
+        footer .footer-social a:hover {
+            color: var(--gold);
+            transform: translateY(-3px);
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+            .slide-content h1 { font-size: 2.8rem; }
+            .contact-container { grid-template-columns: 1fr; gap: 40px; }
+            .section-header h2 { font-size: 2.2rem; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 280px;
+                height: 100vh;
+                background: #FFF8F0;
+                flex-direction: column;
+                padding: 100px 30px 40px;
+                gap: 1.5rem;
+                transition: var(--transition);
+                box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+                z-index: 999;
+            }
+            .nav-links.active { right: 0; }
+            .hamburger { display: flex; }
+            .slide-content h1 { font-size: 2.2rem; }
+            .slide-content p { font-size: 1rem; }
+            .slide-arrows { width: 38px; height: 38px; font-size: 1rem; }
+            .slide-arrows.prev { left: 12px; }
+            .slide-arrows.next { right: 12px; }
+            .products-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+            .testimonials-grid { grid-template-columns: 1fr; }
+            .section { padding: 60px 1rem; }
+            #testimonials, #contact { padding: 60px 1rem; }
+            .contact-form { padding: 28px 20px; }
+            .navbar { padding: 0 1rem; }
+            .product-image { height: 380px; }
+        }
+
+        @media (max-width: 480px) {
+            .products-grid { grid-template-columns: 1fr; gap: 16px; }
+            .slide-content h1 { font-size: 1.8rem; }
+            .slide-content p { font-size: 0.9rem; }
+            .slide-btn { padding: 12px 28px; font-size: 0.85rem; }
+            .section-header h2 { font-size: 1.7rem; }
+            .logo-text { font-size: 1.2rem; }
+            .hero { min-height: 500px; height: 85vh; }
+            .product-image { height: 340px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== NAVIGATION ==================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <img src="./images/logo.jpg" alt="Etnika Logo" class="logo-img">
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home" onclick="closeNav()">Home</a></li>
+                <li><a href="#featured" onclick="closeNav()">Featured</a></li>
+                <li><a href="#testimonials" onclick="closeNav()">Reviews</a></li>
+                <li><a href="#contact" onclick="closeNav()">Contact</a></li>
+                <li><a href="#contact" class="nav-cta" onclick="closeNav()">Shop Now</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger" onclick="toggleNav()">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ==================== HERO SLIDESHOW ==================== -->
+    <section class="hero" id="home">
+        <div class="slides-container">
+            <!-- Slide 1 -->
+            <div class="slide slide-1 active">
+                <div class="slide-content">
+                    <span class="slide-badge">✦ New Collection 2026 ✦</span>
+                    <h1>Elegance in <span class="gold-text">Every Drape</span></h1>
+                    <p>Discover handcrafted churidhars that blend timeless tradition with contemporary grace — stitched to perfection for the modern woman.</p>
+                    <a href="#featured" class="slide-btn">Explore Collection</a>
+                </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="slide slide-2">
+                <div class="slide-content">
+                    <span class="slide-badge">✦ Festive Special ✦</span>
+                    <h1>Where <span class="gold-text">Tradition</span> Meets Style</h1>
+                    <p>Rich fabrics, intricate embroidery, and silhouettes that celebrate you. Make every occasion unforgettable.</p>
+                    <a href="#featured" class="slide-btn">Shop Festive Wear</a>
+                </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="slide slide-3">
+                <div class="slide-content">
+                    <span class="slide-badge">✦ Limited Edition ✦</span>
+                    <h1>Crafted for <span class="gold-text">Royalty</span></h1>
+                    <p>Premium silk churidhars with zari work — because you deserve nothing less than extraordinary.</p>
+                    <a href="#featured" class="slide-btn">View Premium</a>
+                </div>
+            </div>
+        </div>
+        <!-- Arrows -->
+        <button class="slide-arrows prev" onclick="changeSlide(-1)" aria-label="Previous slide">&#10094;</button>
+        <button class="slide-arrows next" onclick="changeSlide(1)" aria-label="Next slide">&#10095;</button>
+        <!-- Indicators -->
+        <div class="slide-indicators">
+            <button class="active" onclick="goToSlide(0)" aria-label="Slide 1"></button>
+            <button onclick="goToSlide(1)" aria-label="Slide 2"></button>
+            <button onclick="goToSlide(2)" aria-label="Slide 3"></button>
+        </div>
+    </section>
+
+    <!-- ==================== FEATURED CHURIDHARS (with real images) ==================== -->
+    <section class="section" id="featured">
+        <div class="section-header">
+            <span class="subtitle">Curated Collection</span>
+            <h2>Featured Items</h2>
+            <div class="divider"></div>
+            <p>Handpicked designs that define elegance. Each piece is a testament to exquisite craftsmanship and premium quality.</p>
+        </div>
+        <div class="products-grid">
+            <!-- Product 1 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Bestseller</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <!-- Replace the src below with the actual image path provided -->
+                    <img src="./images/image01.png" 
+                         alt="Woman wearing a royal maroon silk churidhar with gold embroidery" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Silk Blend</span>
+                    <h3>Royal Maroon Silk Churidhar</h3>
+                    <div class="price">₹1,220 <span class="original">₹1220</span> <span class="discount">38% OFF</span></div>
+<!--                    <div class="product-colors">
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                        <span class="color-4" title="Gold"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge new">New</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image02.jpg" 
+                         alt="Woman wearing an indigo blue cotton churidhar with subtle prints" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Cotton Blend</span>
+                    <h3>Indigo Elegance Cotton Churidhar</h3>
+                    <div class="price">₹780 <span class="original">1,899</span> <span class="discount">27% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-2" title="Indigo"></span>
+                        <span class="color-3" title="Green"></span>
+                        <span class="color-1" title="Maroon"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge">Trending</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image03.png" 
+                         alt="Woman wearing an emerald green georgette churidhar with elegant drape" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Georgette</span>
+                    <h3>Emerald Grace Georgette Churidhar</h3>
+                    <div class="price">₹850 <span class="original">₹2,799</span> <span class="discount">38% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-3" title="Emerald"></span>
+                        <span class="color-2" title="Blue"></span>
+                        <span class="color-4" title="Gold"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image04.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹650 <span class="original">₹2999</span> <span class="discount">38% OFF</span></div>
+                <!--   <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">XS</button>
+                        <button class="size-btn">S</button>
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image05.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹1150 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                    <!--    <button class="size-btn">XXL</button>  -->
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image06.jpg" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹1170 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image07.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹450 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+            <!--        <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image08.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹1220 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div>  -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image09.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹1220 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+               <!--     <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <div class="product-card">
+                <div class="product-image">
+                    <span class="product-badge bestseller">Premium</span>
+                    <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                    <img src="./images/image010.png" 
+                         alt="Woman wearing a golden banarasi silk churidhar with zari details" 
+                         loading="lazy">
+                </div>
+                <div class="product-info">
+                    <span class="category">Banarasi Silk</span>
+                    <h3>Golden Zari Banarasi Churidhar</h3>
+                    <div class="price">₹1220 <span class="original">₹7,999</span> <span class="discount">38% OFF</span></div>
+                <!--    <div class="product-colors">
+                        <span class="color-4" title="Gold"></span>
+                        <span class="color-1" title="Maroon"></span>
+                        <span class="color-5" title="Purple"></span>
+                    </div> -->
+                    <div class="product-sizes">
+                        <button class="size-btn">M</button>
+                        <button class="size-btn">L</button>
+                        <button class="size-btn">XL</button>
+                        <button class="size-btn">XXL</button>
+                    </div>
+
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== TESTIMONIALS ==================== -->
+    <section id="testimonials">
+        <div class="testimonials-container">
+            <div class="section-header">
+                <span class="subtitle">What Our Customers Say</span>
+                <h2>Testimonials</h2>
+                <div class="divider"></div>
+                <p>Real stories from women who fell in love with our churidhars. Your satisfaction is our greatest reward.</p>
+            </div>
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>"The maroon silk churidhar I ordered was absolutely stunning! The fit was perfect, the fabric quality exceeded my expectations, and I received so many compliments at the wedding. Truly a five-star experience!"</p>
+                    <div class="testimonial-author">
+                        <div class="avatar avatar-1">A</div>
+                        <div class="author-info">
+                            <strong>Ananya Sharma</strong>
+                            <span>Mumbai, India</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>"I'm incredibly impressed with the craftsmanship. The churidhar arrived beautifully packaged, the colors were vibrant, and the stitching was impeccable. Etnika is now my go-to for traditional wear!"</p>
+                    <div class="testimonial-author">
+                        <div class="avatar avatar-2">R</div>
+                        <div class="author-info">
+                            <strong>Ritu Patel</strong>
+                            <span>Ahmedabad, India</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <span class="quote-icon">"</span>
+                    <div class="testimonial-stars">★★★★★</div>
+                    <p>"Ordered the emerald georgette churidhar for a family function and it was a showstopper! The drape was elegant, the fabric breathable, and the delivery was super fast. Highly recommended!"</p>
+                    <div class="testimonial-author">
+                        <div class="avatar avatar-3">S</div>
+                        <div class="author-info">
+                            <strong>Sneha Krishnan</strong>
+                            <span>Chennai, India</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT US ==================== -->
+    <section id="contact">
+        <div class="contact-container">
+            <div class="contact-info">
+                <div class="section-header" style="text-align:left; margin-bottom:10px;">
+                    <span class="subtitle">Get In Touch</span>
+                    <h2>Contact Us</h2>
+                    <div class="divider" style="margin:0;"></div>
+                </div>
+                <p style="margin-top:18px;">Have questions about sizing, fabrics, or custom orders? We'd love to hear from you. Reach out and our team will get back within 24 hours.</p>
+                <div class="contact-detail">
+                    <div class="icon-circle">&#128222;</div>
+                    <div class="info-text">
+                        <strong>Call Us</strong>
+                        <span>+91 98765 43210</span>
+                    </div>
+                </div>
+                <div class="contact-detail">
+                    <div class="icon-circle">&#9993;</div>
+                    <div class="info-text">
+                        <strong>Email</strong>
+                        <span>hello@etnika.in</span>
+                    </div>
+                </div>
+                <div class="contact-detail">
+                    <div class="icon-circle">&#128205;</div>
+                    <div class="info-text">
+                        <strong>Visit Our Store</strong>
+                        <span>42, Silk Lane, Commercial Street, Bangalore - 560001</span>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h3>Send Us a Message</h3>
+                <form id="contactForm" onsubmit="handleSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">Full Name *</label>
+                        <input type="text" id="name" placeholder="Enter your full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" placeholder="you@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="interest">Interested In</label>
+                        <select id="interest">
+                            <option value="">Select category</option>
+                            <option value="silk">Silk Churidhars</option>
+                            <option value="cotton">Cotton Churidhars</option>
+                            <option value="georgette">Georgette Churidhars</option>
+                            <option value="banarasi">Banarasi Churidhars</option>
+                            <option value="custom">Custom Order</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Your Message *</label>
+                        <textarea id="message" rows="4" placeholder="Tell us about your requirements..." required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Send Message &#10140;</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer>
+        <div class="footer-social">
+            <a href="#" aria-label="Facebook">&#xf09a;</a>
+            <a href="#" aria-label="Instagram">&#xf16d;</a>
+            <a href="#" aria-label="Pinterest">&#xf231;</a>
+            <a href="#" aria-label="WhatsApp">&#xf232;</a>
+        </div>
+        <p>&copy; 2026 <a href="#">Etnika</a>. All Rights Reserved. | Crafted with &#10084; for timeless traditions.</p>
+    </footer>
+
+    <!-- ==================== SCRIPTS ==================== -->
+    <script>
+        // --- NAVIGATION ---
+        const navbar = document.getElementById('navbar');
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('navLinks');
+
+        function toggleNav() {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        }
+
+        function closeNav() {
+            hamburger.classList.remove('active');
+            navLinks.classList.remove('active');
+        }
+
+        // Navbar scroll effect with hide/show on scroll direction
+        let lastScrollY = 0;
+        let scrollThreshold = 50;
+
+        window.addEventListener('scroll', () => {
+            let currentScrollY = window.scrollY;
+
+            // Show navbar when scrolled to top
+            if (currentScrollY < scrollThreshold) {
+                navbar.classList.remove('hidden');
+                navbar.classList.remove('scrolled');
+            } 
+            // Hide navbar when scrolling down, show when scrolling up
+            else if (currentScrollY > lastScrollY) {
+                // Scrolling down - hide navbar
+                navbar.classList.add('hidden');
+                if (currentScrollY > 50) {
+                    navbar.classList.add('scrolled');
+                }
+            } else {
+                // Scrolling up - show navbar
+                navbar.classList.remove('hidden');
+                navbar.classList.add('scrolled');
+            }
+
+            lastScrollY = currentScrollY;
+        });
+
+        // Close nav on clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navbar.contains(e.target) && navLinks.classList.contains('active')) {
+                closeNav();
+            }
+        });
+
+        // --- SLIDESHOW ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.slide-indicators button');
+        let slideInterval;
+        const SLIDE_DELAY = 5000; // 5 seconds
+
+        function showSlide(index) {
+            if (index >= slides.length) currentSlide = 0;
+            else if (index < 0) currentSlide = slides.length - 1;
+            else currentSlide = index;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            indicators.forEach((ind, i) => {
+                ind.classList.toggle('active', i === currentSlide);
+            });
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+            resetInterval();
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+            resetInterval();
+        }
+
+        function resetInterval() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, SLIDE_DELAY);
+        }
+
+        // Initialize slideshow
+        showSlide(0);
+        slideInterval = setInterval(() => {
+            showSlide(currentSlide + 1);
+        }, SLIDE_DELAY);
+
+        // Pause on hover
+        const heroSection = document.querySelector('.hero');
+        heroSection.addEventListener('mouseenter', () => clearInterval(slideInterval));
+        heroSection.addEventListener('mouseleave', resetInterval);
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // --- CONTACT FORM ---
+        function handleSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const interest = document.getElementById('interest').value;
+            const message = document.getElementById('message').value.trim();
+
+            if (name && email && message) {
+                const btn = event.target.querySelector('.submit-btn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Message Sent!';
+                btn.style.background = '#2d6a4f';
+                btn.disabled = true;
+
+                console.log('Contact Form Submission:', { name, email, interest, message });
+
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = '';
+                    btn.disabled = false;
+                    document.getElementById('contactForm').reset();
+                }, 2500);
+            }
+        }
+
+        // --- WISHLIST BUTTONS ---
+        document.querySelectorAll('.product-wishlist').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const isWishlisted = this.textContent.trim() === '♥';
+                this.textContent = isWishlisted ? '♡' : '♥';
+                this.style.color = isWishlisted ? '' : '#e74c3c';
+                this.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+
+        // --- ADD TO CART BUTTONS ---
+        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const originalText = this.textContent;
+                this.textContent = '✓ Added!';
+                this.style.background = '#2d6a4f';
+                this.style.color = '#FFF';
+                this.style.borderColor = '#2d6a4f';
+                setTimeout(() => {
+                    this.textContent = originalText;
+                    this.style.background = '';
+                    this.style.color = '';
+                    this.style.borderColor = '';
+                }, 1800);
+            });
+        });
+
+        // --- SMOOTH SCROLL FOR ALL ANCHOR LINKS ---
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    const navHeight = navbar.offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - navHeight - 10;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        console.log('🌟 Etnika - Churidhar Collection with real model images ready!');
+    </script>
+</body>
+</html>
