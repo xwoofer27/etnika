@@ -1588,7 +1588,7 @@
                     </div>
                 </div>
             </div>
-            <div class="contact-form">
+       <!--     <div class="contact-form">
                 <h3>Send Us a Message</h3>
                 <form id="contactForm" onsubmit="handleSubmit(event)">
                     <div class="form-group">
@@ -1617,7 +1617,7 @@
                     </div>
                     <button type="submit" class="submit-btn">Send Message &#10140;</button>
                 </form>
-            </div>
+            </div> -->
         </div>
     </section>
 
@@ -1669,8 +1669,22 @@
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    
+    <!-- EmailJS for Email Sending (Latest version) -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/index.min.js"></script>
 
     <script>
+        // ===================== EmailJS INITIALIZATION =====================
+        // Initialize EmailJS when ready
+        window.addEventListener('load', function() {
+            if (typeof emailjs !== 'undefined') {
+                emailjs.init('Nwsw0Ityfd1zBPJ8C');
+                console.log('✅ EmailJS initialized successfully!');
+            } else {
+                console.log('⚠️ EmailJS CDN not loaded');
+            }
+        });
+        
         // Firebase Configuration (same as admin panel)
         const firebaseConfig = {
             apiKey: "AIzaSyABCv8jodiERw3W73R0L9j3X4uY4dxZHSk",
@@ -1971,6 +1985,14 @@
         // --- CONTACT FORM ---
         function handleSubmit(event) {
             event.preventDefault();
+            
+            // Check if EmailJS is available
+            if (typeof emailjs === 'undefined') {
+                alert('Email service is not available. Please try again in a moment.');
+                console.error('❌ EmailJS not loaded');
+                return;
+            }
+            
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const interest = document.getElementById('interest').value;
@@ -1979,18 +2001,49 @@
             if (name && email && message) {
                 const btn = event.target.querySelector('.submit-btn');
                 const originalText = btn.textContent;
-                btn.textContent = '✓ Message Sent!';
-                btn.style.background = '#2d6a4f';
+                btn.textContent = '✉️ Sending...';
                 btn.disabled = true;
 
-                console.log('Contact Form Submission:', { name, email, interest, message });
+                // Prepare email data for admin
+                const adminEmailParams = {
+                    to_email: 'etnikaofficial@gmail.com', // Admin email
+                    from_name: name,
+                    from_email: email,
+                    subject: `New Contact Form: ${interest || 'General Inquiry'}`,
+                    message: message,
+                    interest: interest || 'Not specified'
+                };
 
-                setTimeout(() => {
-                    btn.textContent = originalText;
-                    btn.style.background = '';
-                    btn.disabled = false;
-                    document.getElementById('contactForm').reset();
-                }, 2500);
+                // Send email to admin
+                console.log('📧 Attempting to send email with params:', adminEmailParams);
+                console.log('🔑 Service ID: service_ov2dmoa, Template: template_3lw48sn');
+                
+                emailjs.send('service_ov2dmoa', 'template_3lw48sn', adminEmailParams)
+                    .then(function(response) {
+                        console.log('✅ Email sent successfully:', response);
+                        btn.textContent = '✓ Message Sent!';
+                        btn.style.background = '#2d6a4f';
+                        
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.style.background = '';
+                            btn.disabled = false;
+                            document.getElementById('contactForm').reset();
+                        }, 2500);
+                    })
+                    .catch(function(error) {
+                        console.error('❌ Email error:', error);
+                        console.error('Error message:', error.message);
+                        console.error('Error status:', error.status);
+                        btn.textContent = '✗ Error - Try again';
+                        btn.style.background = '#d32f2f';
+                        
+                        setTimeout(() => {
+                            btn.textContent = originalText;
+                            btn.style.background = '';
+                            btn.disabled = false;
+                        }, 2500);
+                    });
             }
         }
 
