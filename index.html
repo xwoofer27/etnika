@@ -1500,8 +1500,9 @@
                     ? product.sizes.map(size => `<button class="size-btn">${size}</button>`).join('')
                     : '<button class="size-btn">M</button><button class="size-btn">L</button><button class="size-btn">XL</button>';
 
-                const badgeClass = product.badge ? product.badge.toLowerCase() : '';
-                const badgeText = product.badge || 'Featured';
+                // Check if product is sold out
+                const badgeClass = product.is_sold_out ? 'sold-out' : (product.badge ? product.badge.toLowerCase() : '');
+                const badgeText = product.is_sold_out ? 'SOLD OUT' : (product.badge || 'Featured');
 
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
