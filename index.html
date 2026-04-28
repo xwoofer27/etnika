@@ -1404,7 +1404,160 @@
     </footer>
 
     <!-- ==================== SCRIPTS ==================== -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
     <script>
+        // Firebase Configuration (same as admin panel)
+        const firebaseConfig = {
+            apiKey: "AIzaSyABCv8jodiERw3W73R0L9j3X4uY4dxZHSk",
+            authDomain: "etnika-dbm.firebaseapp.com",
+            projectId: "etnika-dbm",
+            storageBucket: "etnika-dbm.firebasestorage.app",
+            messagingSenderId: "584567713730",
+            appId: "1:584567713730:web:30ee3f9401af87496fb05b",
+            measurementId: "G-DM6KWHVL6F"
+        };
+
+        let db = null;
+        let isDbInitialized = false;
+
+        // Wait for Firebase SDK to load, then initialize
+        function initializeFirebase() {
+            console.log('🔧 initializeFirebase called');
+            if (typeof firebase === 'undefined') {
+                // Firebase SDK not loaded yet, try again in 100ms
+                console.log('⏳ Firebase SDK not loaded yet, retrying...');
+                setTimeout(initializeFirebase, 100);
+                return;
+            }
+
+            console.log('✅ Firebase SDK detected, initializing...');
+            try {
+                firebase.initializeApp(firebaseConfig);
+                db = firebase.firestore();
+                isDbInitialized = true;
+                console.log('✅ Firebase initialized successfully!');
+                // Once Firebase is ready, load products
+                loadAndRenderProducts();
+            } catch (error) {
+                console.error('❌ Firebase init failed:', error);
+            }
+        }
+
+        // Load products from Firestore
+        async function loadProductsFromFirebase() {
+            if (!isDbInitialized || !db) {
+                console.log('⚠️ Firebase not initialized yet');
+                return null;
+            }
+
+            try {
+                const querySnapshot = await db.collection('products').get();
+                const products = [];
+                querySnapshot.forEach((doc) => {
+                    products.push({
+                        _docId: doc.id,
+                        ...doc.data()
+                    });
+                });
+                console.log('✅ Loaded', products.length, 'products from Firestore');
+                return products;
+            } catch (error) {
+                console.error('❌ Error loading products:', error);
+                return null;
+            }
+        }
+
+        // Render products to the grid
+        function renderProducts(products) {
+            console.log('🎯 renderProducts called with', products.length, 'products');
+            const productsGrid = document.querySelector('.products-grid');
+            console.log('🔍 Grid element found:', productsGrid ? 'YES' : 'NO');
+            if (!productsGrid) {
+                console.error('❌ Could not find .products-grid element!');
+                return;
+            }
+
+            // Clear existing hardcoded products
+            console.log('🧹 Clearing old products...');
+            productsGrid.innerHTML = '';
+
+            if (!products || products.length === 0) {
+                console.log('⚠️ No products to render');
+                return;
+            }
+
+            console.log('📦 Rendering', products.length, 'products');
+            products.forEach((product, index) => {
+                console.log(`   Product ${index + 1}: ${product.name}`);
+                const discountPercent = product.orig_price && product.selling_price 
+                    ? Math.round(((product.orig_price - product.selling_price) / product.orig_price) * 100)
+                    : 0;
+
+                const sizeButtons = product.sizes && Array.isArray(product.sizes)
+                    ? product.sizes.map(size => `<button class="size-btn">${size}</button>`).join('')
+                    : '<button class="size-btn">M</button><button class="size-btn">L</button><button class="size-btn">XL</button>';
+
+                const badgeClass = product.badge ? product.badge.toLowerCase() : '';
+                const badgeText = product.badge || 'Featured';
+
+                const productCard = document.createElement('div');
+                productCard.className = 'product-card';
+                productCard.innerHTML = `
+                    <div class="product-image">
+                        <span class="product-badge ${badgeClass}">${badgeText}</span>
+                        <button class="product-wishlist" aria-label="Add to wishlist">&#9825;</button>
+                        <img src="${product.ImageURL}" 
+                             alt="${product.name}" 
+                             loading="lazy"
+                             onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22300%22 height=%22400%22><rect fill=%22%23e0d5c7%22 width=%22300%22 height=%22400%22/><text x=%2250%25%22 y=%2250%25%22 font-family=%22Arial%22 font-size=%2216%22 fill=%22%23999%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>Image not found</text></svg>'">
+                    </div>
+                    <div class="product-info">
+                        <span class="category">${product.category || 'Churidhar'}</span>
+                        <h3>${product.name}</h3>
+                        <div class="price">
+                            ₹${product.selling_price.toLocaleString('en-IN')} 
+                            ${product.orig_price ? `<span class="original">₹${product.orig_price.toLocaleString('en-IN')}</span>` : ''}
+                            ${discountPercent > 0 ? `<span class="discount">${discountPercent}% OFF</span>` : ''}
+                        </div>
+                        <div class="product-sizes">
+                            ${sizeButtons}
+                        </div>
+                        <button class="add-to-cart-btn">Add to Cart</button>
+                    </div>
+                `;
+                productsGrid.appendChild(productCard);
+            });
+
+            console.log('✨ Products rendered successfully!');
+            // Re-attach event listeners
+            attachProductEventListeners();
+        }
+
+        // Load and render products
+        async function loadAndRenderProducts() {
+            console.log('🚀 loadAndRenderProducts called');
+            const products = await loadProductsFromFirebase();
+            console.log('📊 Received products:', products);
+            if (products && products.length > 0) {
+                console.log('✅ Rendering', products.length, 'products');
+                renderProducts(products);
+            } else {
+                console.log('⚠️ No products received from Firebase');
+            }
+        }
+
+        // Start Firebase initialization when DOM is ready
+        if (document.readyState === 'loading') {
+            console.log('📄 Page still loading, waiting for DOMContentLoaded...');
+            document.addEventListener('DOMContentLoaded', initializeFirebase);
+        } else {
+            console.log('📄 Page already loaded, initializing Firebase now...');
+            initializeFirebase();
+        }
+    </script>
         // --- NAVIGATION ---
         const navbar = document.getElementById('navbar');
         const hamburger = document.getElementById('hamburger');
@@ -1454,6 +1607,45 @@
                 closeNav();
             }
         });
+
+        // --- PRODUCT EVENT LISTENERS ---
+        function attachProductEventListeners() {
+            // Wishlist buttons
+            document.querySelectorAll('.product-wishlist').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    this.style.color = this.style.color === 'rgb(237, 34, 35)' ? '' : '#ED2223';
+                });
+            });
+
+            // Product cards hover
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-12px)';
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+
+            // Add to cart buttons
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const originalText = this.textContent;
+                    this.textContent = '✓ Added!';
+                    this.style.background = '#2d6a4f';
+                    this.style.color = '#FFF';
+                    this.style.borderColor = '#2d6a4f';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                        this.style.background = '';
+                        this.style.color = '';
+                        this.style.borderColor = '';
+                    }, 1800);
+                });
+            });
+        }
 
         // --- SLIDESHOW ---
         let currentSlide = 0;
@@ -1539,35 +1731,9 @@
             }
         }
 
-        // --- WISHLIST BUTTONS ---
-        document.querySelectorAll('.product-wishlist').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const isWishlisted = this.textContent.trim() === '♥';
-                this.textContent = isWishlisted ? '♡' : '♥';
-                this.style.color = isWishlisted ? '' : '#e74c3c';
-                this.style.transform = 'scale(1.3)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
-            });
-        });
+        // --- WISHLIST BUTTONS (removed - using attachProductEventListeners instead) ---
 
-        // --- ADD TO CART BUTTONS ---
-        document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                const originalText = this.textContent;
-                this.textContent = '✓ Added!';
-                this.style.background = '#2d6a4f';
-                this.style.color = '#FFF';
-                this.style.borderColor = '#2d6a4f';
-                setTimeout(() => {
-                    this.textContent = originalText;
-                    this.style.background = '';
-                    this.style.color = '';
-                    this.style.borderColor = '';
-                }, 1800);
+        // --- ADD TO CART BUTTONS (removed - using attachProductEventListeners instead) ---
             });
         });
 
