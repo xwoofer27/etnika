@@ -819,7 +819,7 @@
     <script>
         (function() {
             // ===================== IMGBB CONFIGURATION =====================
-            // Get your free API key from: https://YOUR_IMGBB_API_KEYapi.imgbb.com/
+            // Get your free API key from: https://api.imgbb.com/
             const IMGBB_API_KEY = '99d91b1c499450b5fa68484f03711e6b'; // <-- Replace with your key
 
             // ===================== FIREBASE CONFIGURATION =====================
@@ -1283,11 +1283,7 @@
                 const selectedSizes = getSelectedSizes();
                 console.log('📋 Selected sizes:', selectedSizes, 'Type:', typeof selectedSizes);
                 
-                // At least one size required
-                if (selectedSizes.length === 0) {
-                    showNotification('Please select at least one size', 'error');
-                    return;
-                }
+                // Sizes are optional — save even if none selected
 
                 // Determine the image URL
                 let finalImageURL = imageURLInput.value.trim();
